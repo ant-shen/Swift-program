@@ -1,15 +1,13 @@
+// Programmer: Kevin Kim & Anthony Shen
+// Instructor: Professor Raheja
+// Course: CS 4080-03
+// Date: 14 November 2023
+// Description: This is our Swift application program that performs matrix operations.
+
 import Foundation
 
 var matrix1: [[Float]] = []
 var matrix2: [[Float]] = []
-
-func enterMatrices() {
-    print("Enter values for Matrix #1:")
-    matrix1 = readMatrix()
-    
-    print("Enter values for Matrix #2:")
-    matrix2 = readMatrix()
-}
 
 func readMatrix() -> [[Float]] {
     var matrix: [[Float]] = []
@@ -88,10 +86,11 @@ func checkMultiplicationPermissibility(matrix1: [[Float]], matrix2: [[Float]]) -
     return matrix1[0].count == matrix2.count
 }
 
+// this driver program tests three different operations with matrices.
 func main() {
     var userInput = 0
-    
-    print("Please enter the size of the matrices:")
+    // prompt the user to enter the size for the first matrix.
+    print("Please enter the size for the Matrix #1:")
     print("Number of rows: ", terminator: "")
     guard let row = Int(readLine() ?? "") else {
         print("Invalid input. Please enter a valid number of rows.")
@@ -102,11 +101,29 @@ func main() {
         print("Invalid input. Please enter a valid number of columns.")
         return
     }
-    
+    // create the first matrix using the row and the column values.
     matrix1 = Array(repeating: Array(repeating: 0, count: col), count: row)
+
+    // prompt the user to enter the size for the second matrix.
+    print("Please enter the size for Matrix #2:")
+    print("Number of rows: ", terminator: "")
+    guard let row = Int(readLine() ?? "") else {
+        print("Invalid input. Please enter a valid number of rows.")
+        return
+    }
+    print("Number of columns: ", terminator: "")
+    guard let col = Int(readLine() ?? "") else {
+        print("Invalid input. Please enter a valid number of columns.")
+        return
+    }
+    // create the second matrix using the row and the column values.
     matrix2 = Array(repeating: Array(repeating: 0, count: col), count: row)
     
-    enterMatrices()
+    print("Enter values for Matrix #1:")
+    matrix1 = readMatrix()
+    
+    print("Enter values for Matrix #2:")
+    matrix2 = readMatrix()
     
     print("Matrix #1:")
     printMatrices(matrix: matrix1)
@@ -151,20 +168,42 @@ func main() {
                     print("Matrix Multiplication finished performing in \(timeInterval) seconds.")
                 }
             case 4:
-                print("Please enter the size of the new matrices:")
+                // prompt the user to enter the size for the first matrix.
+                print("Please enter the size for the Matrix #1:")
                 print("Number of rows: ", terminator: "")
-                guard let newRow = Int(readLine() ?? "") else {
+                
+                guard let row = Int(readLine() ?? "") else {
                     print("Invalid input. Please enter a valid number of rows.")
-                    continue
+                    return
+                }   
+                print("Number of columns: ", terminator: "")
+                guard let col = Int(readLine() ?? "") else {
+                    print("Invalid input. Please enter a valid number of columns.")
+                    return
+                }
+                // create the first matrix using the row and the column values.
+                matrix1 = Array(repeating: Array(repeating: 0, count: col), count: row)
+
+                // prompt the user to enter the size for the second matrix.
+                print("Please enter the size for Matrix #2:")
+                print("Number of rows: ", terminator: "")
+                guard let row = Int(readLine() ?? "") else {
+                    print("Invalid input. Please enter a valid number of rows.")
+                    return
                 }
                 print("Number of columns: ", terminator: "")
-                guard let newCol = Int(readLine() ?? "") else {
+                guard let col = Int(readLine() ?? "") else {
                     print("Invalid input. Please enter a valid number of columns.")
-                    continue
+                    return
                 }
-                matrix1 = Array(repeating: Array(repeating: 0, count: newCol), count: newRow)
-                matrix2 = Array(repeating: Array(repeating: 0, count: newCol), count: newRow)
-                enterMatrices()
+                // create the second matrix using the row and the column values.
+                matrix2 = Array(repeating: Array(repeating: 0, count: col), count: row)
+    
+                print("Enter values for Matrix #1:")
+                matrix1 = readMatrix()
+    
+                print("Enter values for Matrix #2:")
+                matrix2 = readMatrix()
            case 5:
                 print("Terminating the program... Good bye!")
             default:
