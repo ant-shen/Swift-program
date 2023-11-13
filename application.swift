@@ -17,6 +17,7 @@ func main() {
     // prompt the user to enter the size for the first matrix.
     print("Please enter the size for the Matrix #1:")
     print("Number of rows: ", terminator: "")
+    // NOTE: the nil-coalescing operator (??) will ensure that we have a non-nil string.
     guard let row = Int(readLine() ?? "") else {
         print("Invalid input. Please enter a valid number of rows.")
         return
@@ -69,6 +70,8 @@ func main() {
         {
             userInput = choice
 
+            // NOTE: Swift does NOT require parentheses around an entire expression for
+            //       a switch statement unlike C, C++, and Java.
             switch userInput 
             {
             case 1:
@@ -94,12 +97,7 @@ func main() {
                     print("Error: Multiplication is not permissible on the current matrices. Please enter two new matrices to perform multiplication.")
                 } else {
                     print("Result of multiplication:")
-                    let start = DispatchTime.now()
-                    let result = multiplication(matrix1: matrix1, matrix2: matrix2)
-                    printMatrices(matrix: result)
-                    let end = DispatchTime.now()
-                    let timeInterval = Double(end.uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000_000
-                    print("Matrix Multiplication finished performing in \(timeInterval) seconds.")
+                    printMatrices(matrix: multiplication(matrix1: matrix1, matrix2: matrix2))
                 }
             case 4:
                 // prompt the user to enter the size for the first matrix.
@@ -135,7 +133,6 @@ func main() {
     
                 print("Enter values for Matrix #1:")
                 matrix1 = readMatrix()
-    
                 print("Enter values for Matrix #2:")
                 matrix2 = readMatrix()
            case 5:
@@ -149,12 +146,16 @@ func main() {
     } while userInput != 5
 }
 
+// this function allows the user to enter the elements for a matrix row by row.
 func readMatrix() -> [[Float]] 
 {
     var matrix: [[Float]] = []
     for i in 0..<matrix1.count {
         print("Row \(i + 1):")
         if let input = readLine() {
+            // split the input line into an array of substrings using a space as the separator,
+            // and convert each substring to a Float.
+            // NOTE: $0 represents each element/substring produced by the split function.
             let row = input.split(separator: " ").compactMap { Float($0) }
             if row.count == matrix1[0].count {
                 matrix.append(row)
@@ -170,13 +171,16 @@ func readMatrix() -> [[Float]]
     return matrix
 }
 
+// this function will print out the matrix row by row.
 func printMatrices(matrix: [[Float]]) {
     for row in matrix {
+        // convert each Float element in the row array to a String, then print them to the console.
         print(row.map { String($0) }.joined(separator: " "))
     }
     print()
 }
 
+ // this function performs matrix addition.
 func addition(matrix1: [[Float]], matrix2: [[Float]]) -> [[Float]] {
     let row = matrix1.count
     let col = matrix1[0].count
@@ -190,6 +194,7 @@ func addition(matrix1: [[Float]], matrix2: [[Float]]) -> [[Float]] {
     return result
 }
 
+ // this function performs matrix subtraction.
 func subtraction(matrix1: [[Float]], matrix2: [[Float]]) -> [[Float]] {
     let row = matrix1.count
     let col = matrix1[0].count
@@ -203,6 +208,7 @@ func subtraction(matrix1: [[Float]], matrix2: [[Float]]) -> [[Float]] {
     return result
 }
 
+ // this function performs matrix multiplication.
 func multiplication(matrix1: [[Float]], matrix2: [[Float]]) -> [[Float]] {
     let row = matrix1.count
     let col = matrix2[0].count
