@@ -4,12 +4,153 @@
 // Date: 14 November 2023
 // Description: This is our Swift application program that performs matrix operations.
 
+// NOTE: importing "Foundation" will import namespaces that contain a set of predefined 
+//       symbols or functions.
 import Foundation
 
 var matrix1: [[Float]] = []
 var matrix2: [[Float]] = []
 
-func readMatrix() -> [[Float]] {
+// this driver program tests three different operations with matrices.
+func main() {
+    var userInput = 0
+    // prompt the user to enter the size for the first matrix.
+    print("Please enter the size for the Matrix #1:")
+    print("Number of rows: ", terminator: "")
+    guard let row = Int(readLine() ?? "") else {
+        print("Invalid input. Please enter a valid number of rows.")
+        return
+    }
+    print("Number of columns: ", terminator: "")
+    guard let col = Int(readLine() ?? "") else {
+        print("Invalid input. Please enter a valid number of columns.")
+        return
+    }
+    // create the first matrix using the row and the column values.
+    matrix1 = Array(repeating: Array(repeating: 0, count: col), count: row)
+
+    // prompt the user to enter the size for the second matrix.
+    print("Please enter the size for Matrix #2:")
+    print("Number of rows: ", terminator: "")
+    guard let row = Int(readLine() ?? "") else {
+        print("Invalid input. Please enter a valid number of rows.")
+        return
+    }
+    print("Number of columns: ", terminator: "")
+    guard let col = Int(readLine() ?? "") else {
+        print("Invalid input. Please enter a valid number of columns.")
+        return
+    }
+    // create the second matrix using the row and the column values.
+    matrix2 = Array(repeating: Array(repeating: 0, count: col), count: row)
+    
+    // prompt the user to enter the elements for two matrices.
+    print("Enter values for Matrix #1:")
+    matrix1 = readMatrix()
+    print("Enter values for Matrix #2:")
+    matrix2 = readMatrix()
+    
+    // display the two matrices before any operation is performed..
+    print("\nMatrix #1:")
+    printMatrices(matrix: matrix1)
+    print("Matrix #2:")
+    printMatrices(matrix: matrix2)
+    
+    // present a menu that allows the user to select the operation they want to test.
+    repeat {
+        print("\nPlease select from the following options:")
+        print("(1) Add the matrices.")
+        print("(2) Subtract the matrices.")
+        print("(3) Multiply the matrices.")
+        print("(4) Select two new matrices.")
+        print("(5) Exit the program.")
+        
+        if let input = readLine(), let choice = Int(input) 
+        {
+            userInput = choice
+
+            switch userInput 
+            {
+            case 1:
+                // check to see if addition is permissible on the two matrices.
+                if !checkAdditionPermissibility(matrix1: matrix1, matrix2: matrix2) {
+                    print("Error: Addition is not permissible on the current matrices. Please enter two new matrices to perform addition.")
+                } else {
+                    // perform addition on two matrices and print out the result.
+                    print("Result of addition:")
+                    printMatrices(matrix: addition(matrix1: matrix1, matrix2: matrix2))
+                    // NOTE: "break" statement is unnecessary since Swift does not allow automatic
+                    //       fall through in the bottom of each case for switch statements. 
+                }
+            case 2:
+                if !checkAdditionPermissibility(matrix1: matrix1, matrix2: matrix2) {
+                    print("Error: Subtraction is not permissible on the current matrices. Please enter two new matrices to perform subtraction.")
+                } else {
+                    print("Result of subtraction:")
+                    printMatrices(matrix: subtraction(matrix1: matrix1, matrix2: matrix2))
+                }
+            case 3:
+                if !checkMultiplicationPermissibility(matrix1: matrix1, matrix2: matrix2) {
+                    print("Error: Multiplication is not permissible on the current matrices. Please enter two new matrices to perform multiplication.")
+                } else {
+                    print("Result of multiplication:")
+                    let start = DispatchTime.now()
+                    let result = multiplication(matrix1: matrix1, matrix2: matrix2)
+                    printMatrices(matrix: result)
+                    let end = DispatchTime.now()
+                    let timeInterval = Double(end.uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000_000
+                    print("Matrix Multiplication finished performing in \(timeInterval) seconds.")
+                }
+            case 4:
+                // prompt the user to enter the size for the first matrix.
+                print("Please enter the size for the Matrix #1:")
+                print("Number of rows: ", terminator: "")
+                
+                guard let row = Int(readLine() ?? "") else {
+                    print("Invalid input. Please enter a valid number of rows.")
+                    return
+                }   
+                print("Number of columns: ", terminator: "")
+                guard let col = Int(readLine() ?? "") else {
+                    print("Invalid input. Please enter a valid number of columns.")
+                    return
+                }
+                // create the first matrix using the row and the column values.
+                matrix1 = Array(repeating: Array(repeating: 0, count: col), count: row)
+
+                // prompt the user to enter the size for the second matrix.
+                print("Please enter the size for Matrix #2:")
+                print("Number of rows: ", terminator: "")
+                guard let row = Int(readLine() ?? "") else {
+                    print("Invalid input. Please enter a valid number of rows.")
+                    return
+                }
+                print("Number of columns: ", terminator: "")
+                guard let col = Int(readLine() ?? "") else {
+                    print("Invalid input. Please enter a valid number of columns.")
+                    return
+                }
+                // create the second matrix using the row and the column values.
+                matrix2 = Array(repeating: Array(repeating: 0, count: col), count: row)
+    
+                print("Enter values for Matrix #1:")
+                matrix1 = readMatrix()
+    
+                print("Enter values for Matrix #2:")
+                matrix2 = readMatrix()
+           case 5:
+                print("Terminating the program... Good bye!")
+            default:
+                print("Please enter a number from 1 to 5.")
+            }
+        } else {
+            print("Invalid input. Please enter a valid menu option.")
+        }
+    } while userInput != 5
+}
+
+func readMatrix() -> [[Float]] 
+{
     var matrix: [[Float]] = []
     for i in 0..<matrix1.count {
         print("Row \(i + 1):")
@@ -86,133 +227,7 @@ func checkMultiplicationPermissibility(matrix1: [[Float]], matrix2: [[Float]]) -
     return matrix1[0].count == matrix2.count
 }
 
-// this driver program tests three different operations with matrices.
-func main() {
-    var userInput = 0
-    // prompt the user to enter the size for the first matrix.
-    print("Please enter the size for the Matrix #1:")
-    print("Number of rows: ", terminator: "")
-    guard let row = Int(readLine() ?? "") else {
-        print("Invalid input. Please enter a valid number of rows.")
-        return
-    }
-    print("Number of columns: ", terminator: "")
-    guard let col = Int(readLine() ?? "") else {
-        print("Invalid input. Please enter a valid number of columns.")
-        return
-    }
-    // create the first matrix using the row and the column values.
-    matrix1 = Array(repeating: Array(repeating: 0, count: col), count: row)
-
-    // prompt the user to enter the size for the second matrix.
-    print("Please enter the size for Matrix #2:")
-    print("Number of rows: ", terminator: "")
-    guard let row = Int(readLine() ?? "") else {
-        print("Invalid input. Please enter a valid number of rows.")
-        return
-    }
-    print("Number of columns: ", terminator: "")
-    guard let col = Int(readLine() ?? "") else {
-        print("Invalid input. Please enter a valid number of columns.")
-        return
-    }
-    // create the second matrix using the row and the column values.
-    matrix2 = Array(repeating: Array(repeating: 0, count: col), count: row)
-    
-    print("Enter values for Matrix #1:")
-    matrix1 = readMatrix()
-    
-    print("Enter values for Matrix #2:")
-    matrix2 = readMatrix()
-    
-    print("Matrix #1:")
-    printMatrices(matrix: matrix1)
-    print("Matrix #2:")
-    printMatrices(matrix: matrix2)
-    
-    repeat {
-        print("\nPlease select from the following options:")
-        print("(1) Add the matrices.")
-        print("(2) Subtract the matrices.")
-        print("(3) Multiply the matrices.")
-        print("(4) Select two new matrices.")
-        print("(5) Exit the program.")
-        
-        if let input = readLine(), let choice = Int(input) {
-            userInput = choice
-            switch userInput {
-            case 1:
-                if !checkAdditionPermissibility(matrix1: matrix1, matrix2: matrix2) {
-                    print("Error: Addition is not permissible on the current matrices. Please enter two new matrices to perform addition.")
-                } else {
-                    print("Result of addition:")
-                    printMatrices(matrix: addition(matrix1: matrix1, matrix2: matrix2))
-                }
-            case 2:
-                if !checkAdditionPermissibility(matrix1: matrix1, matrix2: matrix2) {
-                    print("Error: Subtraction is not permissible on the current matrices. Please enter two new matrices to perform subtraction.")
-                } else {
-                    print("Result of subtraction:")
-                    printMatrices(matrix: subtraction(matrix1: matrix1, matrix2: matrix2))
-                }
-            case 3:
-                if !checkMultiplicationPermissibility(matrix1: matrix1, matrix2: matrix2) {
-                    print("Error: Multiplication is not permissible on the current matrices. Please enter two new matrices to perform multiplication.")
-                } else {
-                    print("Result of multiplication:")
-                    let start = DispatchTime.now()
-                    let result = multiplication(matrix1: matrix1, matrix2: matrix2)
-                    printMatrices(matrix: result)
-                    let end = DispatchTime.now()
-                    let timeInterval = Double(end.uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000_000
-                    print("Matrix Multiplication finished performing in \(timeInterval) seconds.")
-                }
-            case 4:
-                // prompt the user to enter the size for the first matrix.
-                print("Please enter the size for the Matrix #1:")
-                print("Number of rows: ", terminator: "")
-                
-                guard let row = Int(readLine() ?? "") else {
-                    print("Invalid input. Please enter a valid number of rows.")
-                    return
-                }   
-                print("Number of columns: ", terminator: "")
-                guard let col = Int(readLine() ?? "") else {
-                    print("Invalid input. Please enter a valid number of columns.")
-                    return
-                }
-                // create the first matrix using the row and the column values.
-                matrix1 = Array(repeating: Array(repeating: 0, count: col), count: row)
-
-                // prompt the user to enter the size for the second matrix.
-                print("Please enter the size for Matrix #2:")
-                print("Number of rows: ", terminator: "")
-                guard let row = Int(readLine() ?? "") else {
-                    print("Invalid input. Please enter a valid number of rows.")
-                    return
-                }
-                print("Number of columns: ", terminator: "")
-                guard let col = Int(readLine() ?? "") else {
-                    print("Invalid input. Please enter a valid number of columns.")
-                    return
-                }
-                // create the second matrix using the row and the column values.
-                matrix2 = Array(repeating: Array(repeating: 0, count: col), count: row)
-    
-                print("Enter values for Matrix #1:")
-                matrix1 = readMatrix()
-    
-                print("Enter values for Matrix #2:")
-                matrix2 = readMatrix()
-           case 5:
-                print("Terminating the program... Good bye!")
-            default:
-                print("Please enter a number from 1 to 5.")
-            }
-        } else {
-            print("Invalid input. Please enter a valid menu option.")
-        }
-    } while userInput != 5
-}
-
+// NOTE: The main() function needs to be called explicitly in Swift unlike Java,
+//       C, and C++, which uses the main() method as the single entry point where 
+//       the compiler starts program execution.
 main()
